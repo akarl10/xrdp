@@ -62,6 +62,23 @@ wm_start()
     . /etc/default/locale
     export LANG LANGUAGE
   fi
+  
+  # DESKTOP_SESSION should be set in sesman.ini in the SessionVariables section.
+  # If DESKTOP_SESSION is not set the first available configuration in /usr/share/xsessions
+  # will be used instead
+  if [ -d /usr/share/xsessions ]; then
+    if [ -z $DESKTOP_SESSION ]; then
+        choosenSession=`ls -1 /usr/share/xsessions/*.desktop | head -n 1`
+        DESKTOP_SESSION=${choosenSession##*/}
+        DESKTOP_SESSION=${DESKTOP_SESSION%%.desktop}
+        export DESKTOP_SESSION
+    fi
+    STARTUP=`grep ^Exec= /usr/share/xsessions/$DESKTOP_SESSION.desktop`
+    STARTUP=${STARTUP#Exec=*}
+    XDG_CURRENT_DESKTOP=`grep ^DesktopNames= /usr/share/xsessions/$DESKTOP_SESSION.desktop`
+    XDG_CURRNET_DESKTOP=${DesktopNames#DesktopNames=*}
+    export XDG_CURRENT_DESKTOP
+  fi
 
   # debian
   if [ -r /etc/X11/Xsession ]; then
