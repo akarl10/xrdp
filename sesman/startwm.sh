@@ -65,12 +65,12 @@ wm_start()
   
   # DESKTOP_SESSION should be set in sesman.ini in the SessionVariables section.
   # If set and valid then the STARTUP command will be taken from there
-  if [ -n $DESKTOP_SESSION -a -d /usr/share/xsessions \
-    -a -f /usr/share/xsessions/$DESKTOP_SESSION.desktop ]; then
-    STARTUP=`grep ^Exec= /usr/share/xsessions/$DESKTOP_SESSION.desktop`
+  if [ -n "$DESKTOP_SESSION" ] && [ -d /usr/share/xsessions ] \
+    && [ -f "/usr/share/xsessions/$DESKTOP_SESSION.desktop" ]; then
+    STARTUP=$(grep ^Exec= "/usr/share/xsessions/$DESKTOP_SESSION.desktop")
     STARTUP=${STARTUP#Exec=*}
-    XDG_CURRENT_DESKTOP=`grep ^DesktopNames= /usr/share/xsessions/$DESKTOP_SESSION.desktop`
-    XDG_CURRNET_DESKTOP=${DesktopNames#DesktopNames=*}
+    XDG_CURRENT_DESKTOP=$(grep ^DesktopNames= "/usr/share/xsessions/$DESKTOP_SESSION.desktop")
+    XDG_CURRENT_DESKTOP=${XDG_CURRENT_DESKTOP#DesktopNames=*}
     export XDG_CURRENT_DESKTOP
   fi
 
